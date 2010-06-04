@@ -184,6 +184,7 @@ LiveValidation.prototype = {
 	if(validationFunction == Validate.Remote){
 		validationParamsObj.onResponse = function(valid, paramsUsed){
 			this.validationFailed = !valid;
+      this.remoteValidationSucceed = valid;
 			if(valid){
 				this.message = this.validMessage;
 				this.beforeValid();
@@ -280,9 +281,10 @@ LiveValidation.prototype = {
   doValidations: function(){
     this.validationFailed = false;
     for(var i = 0, len = this.validations.length; i < len; ++i){
-		this.validationFailed = !this.validateElement(this.validations[i].type, this.validations[i].params);
-	  	if(this.validationFailed) return false;	
-    }
+      if(!this.remoteValidationSucceed){
+        this.validationFailed = !this.validateElement(this.validations[i].type, this.validations[i].params);
+        if(this.validationFailed) return false;
+      }      
     this.message = this.validMessage;
     return true;
   },
